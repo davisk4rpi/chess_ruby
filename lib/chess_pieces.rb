@@ -2,6 +2,9 @@ module ChessPieces
 	
 	class Pawn
 
+		attr_accessor :position
+		attr_reader :marker
+
 		def initialize(position)
 			@position = position
 			@marker = marker_color
@@ -36,6 +39,9 @@ module ChessPieces
 
 	class Rook
 
+		attr_accessor :position
+		attr_reader :marker
+
 		def initialize(position)
 			@position = position
 			@marker = marker_color(position)
@@ -58,6 +64,9 @@ module ChessPieces
 
 	class Knight
 
+		attr_accessor :position
+		attr_reader :marker
+
 		def initialize(position)
 			@position = position
 			@marker = marker_color(position)
@@ -76,6 +85,9 @@ module ChessPieces
 
 	class Bishop
 
+		attr_accessor :position
+		attr_reader :marker
+
 		def initialize(position)
 			@position = position
 			@marker = marker_color(position)
@@ -93,6 +105,9 @@ module ChessPieces
 	end
 
 	class Queen
+
+		attr_accessor :position
+		attr_reader :marker
 
 		def initialize(position)
 			@position = position
@@ -120,6 +135,9 @@ module ChessPieces
 
 	class King
 
+		attr_accessor :position
+		attr_reader :marker
+		
 		def initialize(position)
 			@position = position
 			@marker = marker_color(position)
