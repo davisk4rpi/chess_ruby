@@ -8,8 +8,8 @@ module ChessPieces
 		end
 
 		def marker_color
-			return "\u2659" if @position.include? "2"
-			return "\u265F" if @position.include? "7"
+			return "\u2659" if @position.include? "2" #white
+			return "\u265F" if @position.include? "7" #black
 		end
 
 		def single_square
@@ -42,8 +42,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2656" if position.include? "1"
-			return "\u265C" if position.include? "8"
+			return "\u2656" if position.include? "1" #white
+			return "\u265C" if position.include? "8" #black
 		end
 
 		def vertical(spaces)
@@ -64,8 +64,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2658" if position.include? "1"
-			return "\u265E" if position.include? "8"
+			return "\u2658" if position.include? "1" #white
+			return "\u265E" if position.include? "8" #black
 		end
 
 		def jump(arr)
@@ -82,8 +82,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2657" if position.include? "1"
-			return "\u265D" if position.include? "8"
+			return "\u2657" if position.include? "1" #white
+			return "\u265D" if position.include? "8" #black
 		end
 
 		def diagonal(spaces, direction)
@@ -100,8 +100,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2655" if position.include? "1"
-			return "\u265B" if position.include? "8"
+			return "\u2655" if position.include? "1" #white
+			return "\u265B" if position.include? "8" #black
 		end
 
 		def vertical(spaces)
@@ -126,8 +126,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2654" if position.include? "1"
-			return "\u265A" if position.include? "8"
+			return "\u2654" if position.include? "1" #white
+			return "\u265A" if position.include? "8" #black
 		end
 
 		def one_space(direction)
