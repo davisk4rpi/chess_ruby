@@ -74,6 +74,18 @@ module ChessPieces
 			@position = position
 		end
 
+		def vertical(spaces)
+
+		end
+
+		def horizontal(spaces)
+
+		end
+
+		def diagonal(spaces, direction)
+
+		end
+
 	end
 
 	class King
