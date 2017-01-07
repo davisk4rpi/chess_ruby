@@ -4,6 +4,12 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@marker = marker_color
+		end
+
+		def marker_color
+			return "\u2659" if @position.include? "2"
+			return "\u265F" if @position.include? "7"
 		end
 
 		def single_square
@@ -32,6 +38,12 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@marker = marker_color(position)
+		end
+
+		def marker_color(position)
+			return "\u2656" if position.include? "1"
+			return "\u265C" if position.include? "8"
 		end
 
 		def vertical(spaces)
@@ -48,6 +60,12 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@marker = marker_color(position)
+		end
+
+		def marker_color(position)
+			return "\u2658" if position.include? "1"
+			return "\u265E" if position.include? "8"
 		end
 
 		def jump(arr)
@@ -60,6 +78,12 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@marker = marker_color(position)
+		end
+
+		def marker_color(position)
+			return "\u2657" if position.include? "1"
+			return "\u265D" if position.include? "8"
 		end
 
 		def diagonal(spaces, direction)
@@ -72,6 +96,12 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@marker = marker_color(position)
+		end
+
+		def marker_color(position)
+			return "\u2655" if position.include? "1"
+			return "\u265B" if position.include? "8"
 		end
 
 		def vertical(spaces)
@@ -92,6 +122,12 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@marker = marker_color(position)
+		end
+
+		def marker_color(position)
+			return "\u2654" if position.include? "1"
+			return "\u265A" if position.include? "8"
 		end
 
 		def one_space(direction)
