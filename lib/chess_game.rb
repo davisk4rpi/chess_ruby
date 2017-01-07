@@ -40,6 +40,12 @@ module Game
 			exit if response == '3'
 		end
 
+		def new_game
+			system "clear" or system "cls"
+			puts "Player 1 goes first,"
+			new_turn
+		end
+
 	end
 
 	class GameBoard
