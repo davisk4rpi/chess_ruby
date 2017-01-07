@@ -10,6 +10,34 @@ module Game
 
 		def initialize
 			@board = GameBoard.new.board_hash
+			introduction
+		end
+
+		def introduction
+			<<~HEREDOC
+			Welcome to Command Line Chess!
+
+			I hope you know the rules already because I don't have time to explain them.
+			Player 1 moves the bottom pieces and Player 2 moves from the top.
+
+			To move a piece enter the the desired move in this format: current position, final position (a2, a4)
+			To castle, type in 'long castle' or 'short castle' instead of the coordinates
+
+			Please select on of the following options
+
+			1 New Game
+			2 Saved Game
+			3 Exit
+
+			HEREDOC
+			response = gets.chomp
+			until ['1','2','3'].include response
+				"Pick from the options above"
+				response = gets.chomp
+			end
+			new_game if response == '1'
+			saved_game if response == '2'
+			exit if response == '3'
 		end
 
 	end
