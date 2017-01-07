@@ -6,8 +6,10 @@ module Game
 
 	class GamePlay
 
-		def initialize
+		attr_accessor :board
 
+		def initialize
+			@board = GameBoard.new.board_hash
 		end
 
 	end
@@ -16,7 +18,7 @@ module Game
 
 		include ChessPieces
 
-		attr_accessor :@board_hash
+		attr_accessor :board_hash
 
 		def initialize
 			construct_board
