@@ -50,12 +50,20 @@ module ChessPieces
 			@position = position
 		end
 
+		def jump(arr)
+
+		end
+
 	end
 
 	class Bishop
 
 		def initialize(position)
 			@position = position
+		end
+
+		def diagonal(spaces, direction)
+
 		end
 
 	end
