@@ -94,6 +94,10 @@ module ChessPieces
 			@position = position
 		end
 
+		def one_space(direction)
+
+		end
+
 	end
 
 end
