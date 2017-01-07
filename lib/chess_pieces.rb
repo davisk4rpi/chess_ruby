@@ -34,6 +34,14 @@ module ChessPieces
 			@position = position
 		end
 
+		def vertical(spaces)
+
+		end
+
+		def horizontal(spaces)
+
+		end
+
 	end
 
 	class Knight
