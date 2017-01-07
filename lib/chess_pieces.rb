@@ -6,6 +6,26 @@ module ChessPieces
 			@position = position
 		end
 
+		def single_square
+
+		end
+
+		def double_square
+
+		end
+
+		def en_passant
+
+		end
+
+		def promote
+
+		end
+
+		def attack
+
+		end
+
 	end
 
 	class Rook
