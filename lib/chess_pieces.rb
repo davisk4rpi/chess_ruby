@@ -11,8 +11,8 @@ module ChessPieces
 		end
 
 		def marker_color
-			return "\u2659" if @position.include? "2" #white
-			return "\u265F" if @position.include? "7" #black
+			return "\u2659" if @position.to_s.include? "2" #white
+			return "\u265F" if @position.to_s.include? "7" #black
 		end
 
 		def single_square
@@ -48,8 +48,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2656" if position.include? "1" #white
-			return "\u265C" if position.include? "8" #black
+			return "\u2656" if position.to_s.include? "1" #white
+			return "\u265C" if position.to_s.include? "8" #black
 		end
 
 		def vertical(spaces)
@@ -73,8 +73,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2658" if position.include? "1" #white
-			return "\u265E" if position.include? "8" #black
+			return "\u2658" if position.to_s.include? "1" #white
+			return "\u265E" if position.to_s.include? "8" #black
 		end
 
 		def jump(arr)
@@ -94,8 +94,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2657" if position.include? "1" #white
-			return "\u265D" if position.include? "8" #black
+			return "\u2657" if position.to_s.include? "1" #white
+			return "\u265D" if position.to_s.include? "8" #black
 		end
 
 		def diagonal(spaces, direction)
@@ -115,8 +115,8 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2655" if position.include? "1" #white
-			return "\u265B" if position.include? "8" #black
+			return "\u2655" if position.to_s.include? "1" #white
+			return "\u265B" if position.to_s.include? "8" #black
 		end
 
 		def vertical(spaces)
@@ -137,15 +137,15 @@ module ChessPieces
 
 		attr_accessor :position
 		attr_reader :marker
-		
+
 		def initialize(position)
 			@position = position
 			@marker = marker_color(position)
 		end
 
 		def marker_color(position)
-			return "\u2654" if position.include? "1" #white
-			return "\u265A" if position.include? "8" #black
+			return "\u2654" if position.to_s.include? "1" #white
+			return "\u265A" if position.to_s.include? "8" #black
 		end
 
 		def one_space(direction)
