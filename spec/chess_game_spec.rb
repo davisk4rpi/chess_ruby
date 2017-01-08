@@ -38,6 +38,16 @@ describe Game do
 				game.board_view
 			end
 		end
+
+		describe '.proper_format?' do 
+			it 'returns true or false' do
+				expect(game.proper_format?('long castle')).to be true
+				expect(game.proper_format?('a1 b2')).to be true
+				expect(game.proper_format?('long stle')).to be false
+				expect(game.proper_format?('1a 2b')).to be false
+				expect(game.proper_format?('a1,b2')).to be false
+			end
+		end
 	end
 
 end

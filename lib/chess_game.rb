@@ -109,7 +109,7 @@ module Game
 
 		def valid_move?(response)
 			clear_screen
-			unless proper_format?(response)
+			if !proper_format?(response)
 				puts "Check your formatting!"
 				return false
 			elsif !on_board?(response)
@@ -127,7 +127,13 @@ module Game
 		end
 
 		def proper_format?(response)
-
+			return true if response == "long castle" || response == "short castle"
+			return false unless ("a".."z").to_a.include? response[0]
+			return false unless ("0".."9").to_a.include? response[1]
+			return false unless response[2] == ' '
+			return false unless ("a".."z").to_a.include? response[3]
+			return false unless ("0".."9").to_a.include? response[4]
+			return true
 		end
 
 		def clear_screen
