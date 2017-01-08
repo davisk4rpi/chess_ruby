@@ -112,12 +112,17 @@ module Game
 			if !proper_format?(response)
 				puts "Check your formatting!"
 				return false
-			elsif !on_board?(response)
-				puts "Stay on the board!"
-				return false
-			elsif !own_piece?(response)
-				puts "You can't attack your own pieces!"
-				return false
+
+				#castling is always on board and not an attack
+				if response == "long castle" || response == "short castle"
+				elsif !on_board?(response)
+					puts "Stay on the board!"
+					return false
+				elsif !own_piece?(response)
+					puts "You can't attack your own pieces!"
+					return false
+				end
+
 			elsif !possible_maneuver?(response)
 				puts "That piece cant move like that!"
 				return false
@@ -128,12 +133,24 @@ module Game
 
 		def proper_format?(response)
 			return true if response == "long castle" || response == "short castle"
-			return false unless ("a".."z").to_a.include? response[0]
-			return false unless ("0".."9").to_a.include? response[1]
+			return false unless ("a".."z").to_a.include? response[0] #first letter
+			return false unless ("0".."9").to_a.include? response[1] #first number
 			return false unless response[2] == ' '
-			return false unless ("a".."z").to_a.include? response[3]
-			return false unless ("0".."9").to_a.include? response[4]
+			return false unless ("a".."z").to_a.include? response[3] #second letter
+			return false unless ("0".."9").to_a.include? response[4] #second number
 			return true
+		end
+
+		def on_board?(response)
+			return false unless ("a".."h").to_a.include? response[0] #first letter
+			return false unless ("1".."8").to_a.include? response[1] #first number
+			return false unless ("a".."h").to_a.include? response[3] #second letter
+			return false unless ("1".."8").to_a.include? response[4] #second number
+			return true
+		end
+
+		def own_piece?(response)
+
 		end
 
 		def clear_screen

@@ -48,6 +48,14 @@ describe Game do
 				expect(game.proper_format?('a1,b2')).to be false
 			end
 		end
+
+		describe '.on_board?' do 
+			it 'returns true or false' do
+				expect(game.on_board?('a1 b2')).to be true
+				expect(game.on_board?('a1 a0')).to be false
+				expect(game.on_board?('h8 j8')).to be false
+			end
+		end
 	end
 
 end
