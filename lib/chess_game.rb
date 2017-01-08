@@ -20,7 +20,7 @@ module Game
 			I hope you know the rules already because I don't have time to explain them.
 			Player 1 moves the bottom pieces and Player 2 moves from the top.
 
-			To move a piece enter the the desired move in this format: current position, final position (a2, a4)
+			To move a piece enter the the desired move in this format: current position final position (a2 a4)
 			To castle, type in 'long castle' or 'short castle' instead of the coordinates
 
 			Please select on of the following options
@@ -47,15 +47,15 @@ module Game
 		end
 
 		def new_turn
-			puts "Enter your move with the following format: Starting Coordinate, Ending Coordinates... ex: 'a2, a4'"
+			puts "Enter your move with the following format: Starting Coordinate Ending Coordinates... ex: 'a2 a4'\n"
+			"To castle, type in 'long castle' or 'short castle' instead of the coordinates"
 			board_view
 			response = gets.chomp
 			unless valid_move?(response)
-				clear_screen
 				puts 'Pick a valid_move with the correct format'
 				return new_turn
 			end
-			coordinates = response.split(', ')
+			coordinates = response.split(' ')
 			move_piece(coordinates)
 			clear_screen
 			if check?
@@ -73,7 +73,7 @@ module Game
 				x[key] = gamepiece.marker unless gamepiece.nil?
 				x[key] = " " if gamepiece.nil?
 			end
-			
+
 			row9 = "\n     a    b    c    d    e    f    g    h\n" +
 						 "	                                       \n"
 			row8 = "  |     ooooo     ooooo     ooooo     ooooo|\n" +
@@ -107,7 +107,28 @@ module Game
 		puts full_string
 		end
 
-		def 
+		def valid_move?(response)
+			clear_screen
+			unless proper_format?(response)
+				puts "Check your formatting!"
+				return false
+			elsif !on_board?(response)
+				puts "Stay on the board!"
+				return false
+			elsif !own_piece?(response)
+				puts "You can't attack your own pieces!"
+				return false
+			elsif !possible_maneuver?(response)
+				puts "That piece cant move like that!"
+				return false
+			else
+				return true
+			end
+		end
+
+		def proper_format?(response)
+
+		end
 
 		def clear_screen
 			system "clear" or system "cls"
