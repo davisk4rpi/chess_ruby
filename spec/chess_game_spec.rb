@@ -28,6 +28,16 @@ describe Game do
 				end
 			end
 		end
+		describe '.board_view' do
+			it 'prints the board' do
+				game.board_view
+				game.board[:c5] = game.board[:c7]
+				game.board[:c7] = " "
+				game.board[:f3] = game.board[:g1]
+				game.board[:g1] = " "
+				game.board_view
+			end
+		end
 	end
 
 end
