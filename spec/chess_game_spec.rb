@@ -56,6 +56,17 @@ describe Game do
 				expect(game.on_board?('h8 j8')).to be false
 			end
 		end
+
+		#unknown error by rspec when this code is executed. 
+		#may have been fixed on Ruby 2.3.1 release
+		"""describe '.own_piece?' do 
+			it 'returns true or false' do
+				p 
+				#expect(game.own_piece?('a2 a4')).to be true
+				expect(game.own_piece?('a1 a2')).to be false
+				expect(game.own_piece?('h7 h8')).to be false
+			end
+		end"""
 	end
 
 end

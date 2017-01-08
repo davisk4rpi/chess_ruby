@@ -10,7 +10,23 @@ module Game
 
 		def initialize
 			@board = GameBoard.new.board_hash
+			assign_players_pieces
 			#introduction
+		end
+
+		def assign_players_pieces
+			@player1_pieces = []
+			@player2_pieces = []
+			@board.each do | key, piece |
+				unless piece.nil?
+					if (key.to_s.include? '1') || (key.to_s.include? '2')
+						@player1_pieces << piece
+					elsif (key.to_s.include? '7') || (key.to_s.include? '8')
+						@player2_pieces << piece
+					end
+				end
+			end
+			p @player2_pieces
 		end
 
 		def introduction
@@ -150,7 +166,15 @@ module Game
 		end
 
 		def own_piece?(response)
-
+			response.split!(' ')
+			start = response[0]
+			finish = response[1]
+			if @player1_pieces.include? @board[start.to_sym]
+				return false if @player1_pieces.include? @board[finish.to_sym]
+			elsif @player2_pieces.include? @board[start.to_sym]
+				return false if @player2_pieces.include? @board[finish.to_sym]
+			end
+			return true
 		end
 
 		def clear_screen
