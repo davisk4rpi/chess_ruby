@@ -68,7 +68,12 @@ module Game
 
 		def board_view
 			#design for easy understanding/view over minimalist algorithm
-			x = @board
+			x = {}
+			@board.each do | key, gamepiece |
+				x[key] = gamepiece.marker unless gamepiece.nil?
+				x[key] = " " if gamepiece.nil?
+			end
+			
 			row9 = "\n     a    b    c    d    e    f    g    h\n" +
 						 "	                                       \n"
 			row8 = "  |     ooooo     ooooo     ooooo     ooooo|\n" +
@@ -102,6 +107,8 @@ module Game
 		puts full_string
 		end
 
+		def 
+
 		def clear_screen
 			system "clear" or system "cls"
 		end
@@ -124,7 +131,7 @@ module Game
 			@board_hash = {}
 			letters.each do | letter |
 				numbers.each do | number |
-					@board_hash[("#{letter}#{number}".to_sym)] = " "
+					@board_hash[("#{letter}#{number}".to_sym)] = nil
 				end
 			end
 			fill_board
@@ -133,25 +140,12 @@ module Game
 
 		def fill_board #fills the board with initial placement of all pieces
 			@board_hash.each do | key, value |
-				if key.to_s.match(/[2,7]/)
-					pawn = Pawn.new(key)
-					@board_hash[key] = pawn.marker
-				elsif [:a1, :h1, :a8, :h8].include? key
-					rook = Rook.new(key)
-					@board_hash[key] = rook.marker
-				elsif [:b1, :g1, :b8, :g8].include? key
-					knight = Knight.new(key)
-					@board_hash[key] = knight.marker
-				elsif [:c1, :f1, :c8, :f8].include? key
-					bishop = Bishop.new(key)
-					@board_hash[key] = bishop.marker
-				elsif [:d1, :d8,].include? key
-					queen = Queen.new(key)
-					@board_hash[key] = queen.marker
-				elsif [:e1, :e8,].include? key
-					king = King.new(key)
-					@board_hash[key] = king.marker	
-				end 
+				@board_hash[key] = Pawn.new(key) if key.to_s.match(/[2,7]/)
+				@board_hash[key] = Rook.new(key) if [:a1, :h1, :a8, :h8].include? key
+				@board_hash[key] = Knight.new(key) if [:b1, :g1, :b8, :g8].include? key
+				@board_hash[key] = Bishop.new(key) if [:c1, :f1, :c8, :f8].include? key
+				@board_hash[key] = Queen.new(key) if [:d1, :d8,].include? key
+				@board_hash[key] = King.new(key) if [:e1, :e8,].include? key
 			end
 		end
 
