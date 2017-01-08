@@ -41,9 +41,33 @@ module Game
 		end
 
 		def new_game
-			system "clear" or system "cls"
+			clear_screen
 			puts "Player 1 goes first,"
 			new_turn
+		end
+
+		def new_turn
+			puts "Enter your move with the following format: Starting Coordinate, Ending Coordinates... ex: 'a2, a4'"
+			board_view
+			response = gets.chomp
+			unless valid_move?(response)
+				clear_screen
+				puts 'Pick a valid_move with the correct format'
+				return new_turn
+			end
+			coordinates = response.split(', ')
+			move_piece(coordinates)
+			clear_screen
+			if check?
+				puts "Check!"
+			elsif check? == "checkmate"
+				checkmate
+			end
+			new_turn
+		end
+
+		def clear_screen
+			system "clear" or system "cls"
 		end
 
 	end
