@@ -13,9 +13,9 @@ module ChessPieces
 		end
 
 		def pick_direction
-			if @inital[1] == '2'
+			if @initial[1] == '2'
 				@direction = 1
-			elsif @inital[1] == '7'
+			elsif @initial[1] == '7'
 				@direction = -1
 			end			
 		end
@@ -35,7 +35,7 @@ module ChessPieces
 		end
 
 		def single_square?(coordinate, board)
-			if board[coordinate.to_sym] = nil
+			if board[coordinate.to_sym].nil?
 				return true if ((@position[0] == coordinate[0]) && 
 											 (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i))
 			end
@@ -44,7 +44,7 @@ module ChessPieces
 
 		def double_square?(coordinate, board)
 			path = coordinate[0] + ((coordinate[1].to_i + @position[1].to_i)/2).to_s
-			if (board[coordinate.to_sym] = nil && board[path.to_sym] == nil)
+			if (board[coordinate.to_sym].nil? && board[path.to_sym].nil?)
 				if @position == @initial
 					return true if ((@position[0] == coordinate[0]) && 
 												 (@position[1].to_i + (2 * @direction)  == coordinate[1].to_i))
@@ -54,7 +54,7 @@ module ChessPieces
 		end
 
 		def en_passant?(coordinate, board)
-			if (board[coordinate.to_sym] = nil && 
+			if (board[coordinate.to_sym].nil? && 
 				 board[:last_moved][0].is_a?(Pawn) &&
 				 board[:last_moved][1] == 'double_square' &&
 				 coordinate[1]== board[:last_moved][0].position[1] &&
@@ -70,7 +70,7 @@ module ChessPieces
 		end
 
 		def attack?(coordinate, board)
-			unless board[coordinate.to_sym] = nil
+			unless board[coordinate.to_sym].nil?
 				return true if (((@position[0] == coordinate[0].succ) || (@position[0].succ == coordinate[0])) && 
 											 (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i))
 			end
@@ -102,7 +102,16 @@ module ChessPieces
 		end
 
 		def vertical?(coordinate, board)
-
+			if coordinate[0] == @position[0]
+				array = (coordinate[1]...position[1]).to_a
+				array.each do | space |
+					key = (coordinate[0] + space).to_sym
+					unless board[key] == self
+						return false unless board[key].nil?
+					end
+				end
+			end
+			return true
 		end
 
 		def horizontal?(coordinate, board)
