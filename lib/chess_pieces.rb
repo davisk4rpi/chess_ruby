@@ -7,7 +7,17 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@initial = position
 			@marker = marker_color
+		end
+
+		def possible_maneuver?(coordinate, board)
+			return true if (single_square?(coordinate, board) || 
+											double_square?(coordinate, board) ||
+											en_passant?(coordinate, board) ||
+											promote?(coordinate, board) ||
+											attack?(coordinate, board)) 
+			return false
 		end
 
 		def marker_color
@@ -15,23 +25,26 @@ module ChessPieces
 			return "\u265F" if @position.to_s.include? "7" #black
 		end
 
-		def single_square
+		def single_square?(coordinate, board)
+			if board[coordinate] = nil
+				return true if (@position[0] == coordinate[0]) && (@position[1].to_i + 1  == coordinate[1].to_i)
+			end
+			return false
+		end
+
+		def double_square?(coordinate, board)
 
 		end
 
-		def double_square
+		def en_passant?(coordinate, board)
 
 		end
 
-		def en_passant
+		def promote?(coordinate, board)
 
 		end
 
-		def promote
-
-		end
-
-		def attack
+		def attack?(coordinate, board)
 
 		end
 
@@ -44,6 +57,7 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@initial = position
 			@marker = marker_color(position)
 		end
 
@@ -140,6 +154,7 @@ module ChessPieces
 
 		def initialize(position)
 			@position = position
+			@initial = position
 			@marker = marker_color(position)
 		end
 
