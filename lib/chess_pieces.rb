@@ -24,7 +24,7 @@ module ChessPieces
 			return true if (single_square?(coordinate, board) || 
 											double_square?(coordinate, board) ||
 											en_passant?(coordinate, board) ||
-											promote?(coordinate, board) ||
+											#promote?(coordinate, board) ||
 											attack?(coordinate, board)) 
 			return false
 		end
@@ -36,7 +36,8 @@ module ChessPieces
 
 		def single_square?(coordinate, board)
 			if board[coordinate.to_sym] = nil
-				return true if ((@position[0] == coordinate[0]) && (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i))
+				return true if ((@position[0] == coordinate[0]) && 
+											 (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i))
 			end
 			return false
 		end
@@ -45,7 +46,8 @@ module ChessPieces
 			path = coordinate[0] + ((coordinate[1].to_i + @position[1].to_i)/2).to_s
 			if (board[coordinate.to_sym] = nil && board[path.to_sym] == nil)
 				if @position == @initial
-					return true if ((@position[0] == coordinate[0]) && (@position[1].to_i + (2 * @direction)  == coordinate[1].to_i))
+					return true if ((@position[0] == coordinate[0]) && 
+												 (@position[1].to_i + (2 * @direction)  == coordinate[1].to_i))
 				end
 			end
 			return false
@@ -68,7 +70,11 @@ module ChessPieces
 		end
 
 		def attack?(coordinate, board)
-
+			unless board[coordinate.to_sym] = nil
+				return true if (((@position[0] == coordinate[0].succ) || (@position[0].succ == coordinate[0])) && 
+											 (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i))
+			end
+			return false
 		end
 
 	end
