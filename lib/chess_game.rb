@@ -11,6 +11,7 @@ module Game
 		def initialize
 			@board = GameBoard.new.board_hash
 			assign_players_pieces
+			@active_player = @player1_pieces
 			#introduction
 		end
 
@@ -26,7 +27,6 @@ module Game
 					end
 				end
 			end
-			p @player2_pieces
 		end
 
 		def introduction
@@ -79,7 +79,13 @@ module Game
 			elsif check? == "checkmate"
 				checkmate
 			end
+			active_player_change
 			new_turn
+		end
+
+		def active_player_change
+			@active_player = @player2_pieces if active_player == @player1_pieces
+			@active_player = @player1_pieces if active_player == @player2_pieces
 		end
 
 		def board_view
@@ -135,7 +141,7 @@ module Game
 					puts "Stay on the board!"
 					return false
 				elsif !own_piece?(response)
-					puts "You can't attack your own pieces!"
+					puts "You can't move pieces you don't have and you can't attack your own pieces!"
 					return false
 				end
 
@@ -169,12 +175,19 @@ module Game
 			response.split!(' ')
 			start = response[0]
 			finish = response[1]
-			if @player1_pieces.include? @board[start.to_sym]
-				return false if @player1_pieces.include? @board[finish.to_sym]
-			elsif @player2_pieces.include? @board[start.to_sym]
-				return false if @player2_pieces.include? @board[finish.to_sym]
+			if @active_player.include? @board[start.to_sym]
+				return false if @active_player.include? @board[finish.to_sym]
+			else
+				return false
 			end
 			return true
+		end
+
+		def possible_maneuver?(response)
+			response.split!(' ')
+			start = response[0]
+			finish = response[1]
+
 		end
 
 		def clear_screen
