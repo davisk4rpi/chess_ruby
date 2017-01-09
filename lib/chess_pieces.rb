@@ -53,8 +53,10 @@ module ChessPieces
 
 		def en_passant?(coordinate, board)
 			if (board[coordinate.to_sym] = nil && 
-				 coordinate[1]== board[:last_moved].position[1] &&
-				 (coordinate[0].succ == board[:last_moved].position[0] || coordinate[0] == board[:last_moved].position[0].succ))
+				 board[:last_moved][0].is_a?(Pawn) &&
+				 board[:last_moved][1] == 'double_square' &&
+				 coordinate[1]== board[:last_moved][0].position[1] &&
+				 (coordinate[0].succ == board[:last_moved][0].position[0] || coordinate[0] == board[:last_moved][0].position[0].succ))
 				return true if (((@position[0] == coordinate[0].succ) || (@position[0].succ == coordinate[0])) && 
 											 (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i))
 			end
