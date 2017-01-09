@@ -90,16 +90,22 @@ module ChessPieces
 			@marker = marker_color(position)
 		end
 
+		def possible_maneuver?(coordinate, board)
+			return true if (vertical?(coordinate, board) || 
+											horizontal?(coordinate, board))
+			return false
+		end
+
 		def marker_color(position)
 			return "\u2656" if position.to_s.include? "1" #white
 			return "\u265C" if position.to_s.include? "8" #black
 		end
 
-		def vertical(spaces)
+		def vertical?(coordinate, board)
 
 		end
 
-		def horizontal(spaces)
+		def horizontal?(coordinate, board)
 
 		end
 
