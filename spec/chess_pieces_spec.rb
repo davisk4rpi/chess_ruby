@@ -42,7 +42,9 @@ describe ChessPieces do
 		describe ".en_passant" do
 			it 'returns true or false' do
 				expect(board[:a2].en_passant?(:a4, board)).to be false
-				board[:b5] = ChessPieces::Pawn.new(:b5)
+				pawn_attacker = ChessPieces::Pawn.new(:b2)
+				pawn_attacker.position = :b5
+				board[:b5] = pawn_attacker
 				pawn = ChessPieces::Pawn.new(:c5)
 				expect(board[:b5].en_passant?(:c6, board)).to be false
 				board[:last_moved] = [pawn, 'double_square']

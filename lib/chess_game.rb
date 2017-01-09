@@ -216,6 +216,7 @@ module Game
 				end
 			end
 			fill_board
+			@board_hash[:last_moved] = nil
 			return @board_hash
 		end
 
