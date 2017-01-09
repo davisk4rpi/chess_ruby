@@ -184,10 +184,10 @@ module Game
 		end
 
 		def possible_maneuver?(response)
+			#checks the piece's possible_maneuver? method in chess_pieces.rb
 			response.split!(' ')
-			start = response[0]
-			finish = response[1]
-
+			return true if @board[response[0].to_sym].possible_maneuver?(response[1])
+			return false
 		end
 
 		def clear_screen
