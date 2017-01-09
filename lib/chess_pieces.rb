@@ -9,6 +9,11 @@ module ChessPieces
 			@position = position
 			@initial = position
 			@marker = marker_color
+			pick_direction
+		end
+
+		def pick_direction
+
 		end
 
 		def possible_maneuver?(coordinate, board)
@@ -26,14 +31,14 @@ module ChessPieces
 		end
 
 		def single_square?(coordinate, board)
-			if board[coordinate] = nil
+			if board[coordinate.to_sym] = nil
 				return true if (@position[0] == coordinate[0]) && (@position[1].to_i + 1  == coordinate[1].to_i)
 			end
 			return false
 		end
 
 		def double_square?(coordinate, board)
-			if board[coordinate] = nil
+			if board[coordinate.to_sym] = nil && ()
 				if @position == @initial
 					return true if (@position[0] == coordinate[0]) && (@position[1].to_i + 2  == coordinate[1].to_i)
 				end
@@ -42,7 +47,13 @@ module ChessPieces
 		end
 
 		def en_passant?(coordinate, board)
-
+			if (board[coordinate.to_sym] = nil && 
+				 coordinate[1]== board[:last_moved].position[1] &&
+				 (coordinate[0].succ == board[:last_moved].position[0] || coordinate[0] == board[:last_moved].position[0].succ))
+				return true if ((@position[0] == coordinate[0].succ) || (@position[0].succ == coordinate[0])) && 
+											 (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i)
+			end
+			return false
 		end
 
 		def promote?(coordinate, board)
