@@ -177,16 +177,15 @@ module Game
 			finish = response[1]
 			if @active_player.include? @board[start.to_sym]
 				return false if @active_player.include? @board[finish.to_sym]
-			else
-				return false
+				return true
 			end
-			return true
+			return false
 		end
 
 		def possible_maneuver?(response)
 			#checks the piece's possible_maneuver? method in chess_pieces.rb
 			response.split!(' ')
-			return true if @board[response[0].to_sym].possible_maneuver?(response[1])
+			return true if @board[response[0].to_sym].possible_maneuver?(response[1], @board)
 			return false
 		end
 
@@ -215,6 +214,7 @@ module Game
 					@board_hash[("#{letter}#{number}".to_sym)] = nil
 				end
 			end
+			@board_hash[:last_moved] = [nil, nil]
 			fill_board
 			return @board_hash
 		end
