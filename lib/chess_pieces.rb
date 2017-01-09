@@ -13,7 +13,11 @@ module ChessPieces
 		end
 
 		def pick_direction
-
+			if @inital[1] == '2'
+				@direction = 1
+			elsif @inital[1] == '7'
+				@direction = -1
+			end			
 		end
 
 		def possible_maneuver?(coordinate, board)
@@ -32,7 +36,7 @@ module ChessPieces
 
 		def single_square?(coordinate, board)
 			if board[coordinate.to_sym] = nil
-				return true if (@position[0] == coordinate[0]) && (@position[1].to_i + 1  == coordinate[1].to_i)
+				return true if (@position[0] == coordinate[0]) && (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i)
 			end
 			return false
 		end
@@ -40,7 +44,7 @@ module ChessPieces
 		def double_square?(coordinate, board)
 			if board[coordinate.to_sym] = nil && ()
 				if @position == @initial
-					return true if (@position[0] == coordinate[0]) && (@position[1].to_i + 2  == coordinate[1].to_i)
+					return true if (@position[0] == coordinate[0]) && (@position[1].to_i + (2 * @direction)  == coordinate[1].to_i)
 				end
 			end
 			return false
