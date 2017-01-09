@@ -57,12 +57,13 @@ describe ChessPieces do
 
 		describe ".attack" do
 			it 'returns true or false' do 
-				expect(board[:a2].double_square?(:b3, board)).to be false
+				board[:b3] = nil
+				expect(board[:a2].attack?(:b3, board)).to be false
 				board[:b3] = ChessPieces::Pawn.new(:b3)
-				expect(board[:a2].double_square?(:b3, board)).to be true
-				expect(board[:b2].double_square?(:b3, board)).to be false
-				expect(board[:b2].double_square?(:c4, board)).to be false
-				expect(board[:b2].double_square?(:b4, board)).to be false
+				expect(board[:a2].attack?(:b3, board)).to be true
+				expect(board[:b2].attack?(:b3, board)).to be false
+				expect(board[:b2].attack?(:c4, board)).to be false
+				expect(board[:b2].attack?(:b4, board)).to be false
 			end
 		end
 
