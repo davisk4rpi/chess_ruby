@@ -33,7 +33,12 @@ module ChessPieces
 		end
 
 		def double_square?(coordinate, board)
-
+			if board[coordinate] = nil
+				if @position == @initial
+					return true if (@position[0] == coordinate[0]) && (@position[1].to_i + 2  == coordinate[1].to_i)
+				end
+			end
+			return false
 		end
 
 		def en_passant?(coordinate, board)
