@@ -135,4 +135,21 @@ describe ChessPieces do
 		end
 	end
 
+	describe "::King" do 
+		board = Game::GameBoard.new
+		board = board.board_hash
+
+		describe ".single_square" do 
+			it 'returns true or false' do 
+				expect(board[:e1].single_square?(:d2, board)).to be true
+				expect(board[:e8].single_square?(:e7, board)).to be true
+				board[:a4] = ChessPieces::King.new(:a4)
+				expect(board[:a4].single_square?(:h4, board)).to be false
+				expect(board[:a4].single_square?(:b3, board)).to be true
+				expect(board[:a4].single_square?(:b4, board)).to be true
+				expect(board[:a4].single_square?(:a7, board)).to be false
+			end
+		end
+	end
+
 end
