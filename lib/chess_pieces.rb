@@ -120,7 +120,20 @@ module ChessPieces
 		end
 
 		def horizontal?(coordinate, board)
-
+			if coordinate[1] == @position[1]
+				array = (position[0]...coordinate[0]).to_a if position[0] < coordinate[0]
+				array2 = (coordinate[0]..position[0]).to_a.reverse
+				array = array2[0...-1] if position[0] > coordinate[0]
+				array.each do | space |
+					key = (space + coordinate[1]).to_sym
+					unless board[key] == self
+						return false unless board[key].nil?
+					end
+				end
+			else
+				return false
+			end
+			return true
 		end
 
 	end
@@ -135,13 +148,32 @@ module ChessPieces
 			@marker = marker_color(position)
 		end
 
+		def possible_maneuver?(coordinate, board)
+			return true if jump?(coordinate)
+			return false
+		end
+
 		def marker_color(position)
 			return "\u2658" if position.to_s.include? "1" #white
 			return "\u265E" if position.to_s.include? "8" #black
 		end
 
-		def jump(arr)
-
+		def jump?(coordinate)
+			letters = ("a".."h").to_a
+			numbers = ("1".."8").to_a
+			i = letters.index(@position[0])
+			j = numbers.index(@position[1])
+			possible_moves = []
+			possible_moves << (letters[i-1] + numbers[j-2]) unless (i == 0 || j <= 1)
+			possible_moves << (letters[i-1] + numbers[j+2]) unless (i == 0 || j >= 6)
+			possible_moves << (letters[i+1] + numbers[j-2]) unless (i == 7 || j <= 1)
+			possible_moves << (letters[i+1] + numbers[j+2]) unless (i == 7 || j >= 6)
+			possible_moves << (letters[i-2] + numbers[j-1]) unless (i <= 1 || j == 0)
+			possible_moves << (letters[i-2] + numbers[j+1]) unless (i <= 1 || j == 7)
+			possible_moves << (letters[i+2] + numbers[j-1]) unless (i >= 6 || j == 0)
+			possible_moves << (letters[i+2] + numbers[j+1]) unless (i >= 6 || j == 7)
+			return true if possible_moves.include? coordinate.to_s
+			return false
 		end
 
 	end

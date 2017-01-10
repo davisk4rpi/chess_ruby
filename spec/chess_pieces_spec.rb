@@ -93,8 +93,24 @@ describe ChessPieces do
 				expect(board[:b3].vertical?(:e3, board)).to be false
 				#going down the board
 				expect(board[:b5].vertical?(:b3, board)).to be true
-				p "here"
 				expect(board[:b5].vertical?(:b1, board)).to be false
+			end
+		end
+	end
+
+	describe "::Knight" do 
+		board = Game::GameBoard.new
+		board = board.board_hash
+
+		describe ".jump" do 
+			it 'returns true or false' do 
+				expect(board[:b1].jump?(:c3)).to be true
+				expect(board[:b8].jump?(:c6)).to be true
+				board[:b5] = ChessPieces::Knight.new(:b5)
+				expect(board[:b5].jump?(:d4)).to be true
+				expect(board[:b5].jump?(:e3)).to be false
+				expect(board[:b5].jump?(:h4)).to be false
+				expect(board[:b1].jump?(:a7)).to be false
 			end
 		end
 	end
