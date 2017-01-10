@@ -104,13 +104,17 @@ module ChessPieces
 
 		def vertical?(coordinate, board)
 			if coordinate[0] == @position[0]
-				array = (coordinate[1]...position[1]).to_a
+				array = (position[1]...coordinate[1]).to_a if position[1] < coordinate[1]
+				array2 = (coordinate[1]..position[1]).to_a.reverse
+				array = array2[0...-1] if position[1] > coordinate[1]
 				array.each do | space |
 					key = (coordinate[0] + space).to_sym
 					unless board[key] == self
 						return false unless board[key].nil?
 					end
 				end
+			else
+				return false
 			end
 			return true
 		end

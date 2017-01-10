@@ -3,10 +3,10 @@ require 'chess_game'
 
 describe ChessPieces do
 
-	board = Game::GameBoard.new
-	board = board.board_hash
-
 	describe "::Pawn" do 
+		board = Game::GameBoard.new
+		board = board.board_hash
+
 		describe ".marker_color" do 
 			describe "position ':c2" do
 				it "returns '\u2659'" do
@@ -15,7 +15,6 @@ describe ChessPieces do
 				end
 			end
 		end
-	end
 
 		describe ".single_square" do
 			it 'returns true or false' do 
@@ -66,5 +65,38 @@ describe ChessPieces do
 				expect(board[:b2].attack?(:b4, board)).to be false
 			end
 		end
+	end
+
+	describe "::Rook" do 
+		board = Game::GameBoard.new
+		board = board.board_hash
+		board[:b3] = ChessPieces::Rook.new(:b3)
+
+		describe ".horizontal" do			
+			it 'returns true or false' do 
+				expect(board[:b3].horizontal?(:e3, board)).to be true
+				board[:d3] = ChessPieces::Rook.new(:d3)
+				expect(board[:b3].horizontal?(:e3, board)).to be false
+				expect(board[:b3].horizontal?(:d3, board)).to be true
+				expect(board[:b3].horizontal?(:b5, board)).to be false
+				expect(board[:d3].horizontal?(:c3, board)).to be true
+			end
+		end
+
+		describe ".vertical" do			
+			it 'returns true or false' do 
+				#going up the board
+				expect(board[:b3].vertical?(:b6, board)).to be true
+				board[:b5] = ChessPieces::Rook.new(:b5)
+				expect(board[:b3].vertical?(:b6, board)).to be false
+				expect(board[:b3].vertical?(:b5, board)).to be true
+				expect(board[:b3].vertical?(:e3, board)).to be false
+				#going down the board
+				expect(board[:b5].vertical?(:b3, board)).to be true
+				p "here"
+				expect(board[:b5].vertical?(:b1, board)).to be false
+			end
+		end
+	end
 
 end
