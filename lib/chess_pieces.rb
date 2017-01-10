@@ -188,13 +188,36 @@ module ChessPieces
 			@marker = marker_color(position)
 		end
 
+		def possible_maneuver?(coordinate, board)
+			return true if diagonal?(coordinate, board)
+			return false
+		end
+
 		def marker_color(position)
 			return "\u2657" if position.to_s.include? "1" #white
 			return "\u265D" if position.to_s.include? "8" #black
 		end
 
-		def diagonal(spaces, direction)
-
+		def diagonal?(coordinate, board)
+			letters = ("a".."h").to_a
+			numbers = ("1".."8").to_a
+			i1 = letters.index(@position[0])
+			i2 = letters.index(coordinate[0])
+			i = i2 - i1
+			i > 0 ? (i_step = 1) : (i_step = -1)
+			j1 = numbers.index(@position[1])
+			j2 = numbers.index(coordinate[1])
+			j = j2 - j1
+			j > 0 ? (j_step = 1) : (j_step = -1)
+			multiplier = 1
+			return false unless i.abs == j.abs
+			step = 1
+			(i.abs - 1).times do 
+				key =(letters[i1 + i_step * multiplier] + numbers[j1 + j_step * multiplier]).to_sym
+				return false unless (board[key] == nil)
+				multiplier += 1
+			end
+			return true
 		end
 
 	end

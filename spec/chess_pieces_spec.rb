@@ -115,4 +115,24 @@ describe ChessPieces do
 		end
 	end
 
+	describe "::Bishop" do 
+		board = Game::GameBoard.new
+		board = board.board_hash
+
+		describe ".diagonal" do 
+			it 'returns true or false' do 
+				p board[:d2]
+				expect(board[:c1].diagonal?(:f4, board)).to be false
+				board[:d2] = nil
+				expect(board[:c1].diagonal?(:f4, board)).to be true
+				board[:b2] = nil
+				expect(board[:c1].diagonal?(:a3, board)).to be true
+				board[:b5] = ChessPieces::Bishop.new(:b5)
+				expect(board[:b5].diagonal?(:d3, board)).to be true
+				expect(board[:b5].diagonal?(:e3, board)).to be false
+				expect(board[:b5].diagonal?(:b4, board)).to be false
+			end
+		end
+	end
+
 end
