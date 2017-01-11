@@ -1,4 +1,4 @@
-require 'chess_pieces'
+require_relative 'chess_pieces'
 
 module Game
 
@@ -13,7 +13,7 @@ module Game
 			assign_players_pieces
 			@active_player = @player1_pieces
 			@defending_player = @player2_pieces
-			#introduction
+			introduction
 		end
 
 		def assign_players_pieces
@@ -48,7 +48,7 @@ module Game
 
 			HEREDOC
 			response = gets.chomp
-			until ['1','2','3'].include response
+			until ['1','2','3'].include? response
 				"Pick from the options above"
 				response = gets.chomp
 			end
@@ -69,7 +69,13 @@ module Game
 			board_view
 			response = gets.chomp
 			unless valid_move?(response)
+				clear_screen
 				puts 'Pick a valid_move with the correct format'
+				return new_turn
+			end
+			if check_yourself?(response, @active_player, @defending_player)
+				clear_screen
+				puts "You can't make a move that puts your King in check!"
 				return new_turn
 			end
 			coordinates = response.split(' ')
@@ -155,8 +161,7 @@ module Game
 				puts "That piece cant move like that!"
 				return false
 			else
-				return true unless check_yourself?(response, @active_player, @defending_player)
-				puts "You can't make a move that puts your King in check!"
+				return true
 			end
 
 		end
@@ -180,7 +185,7 @@ module Game
 		end
 
 		def own_piece?(response)
-			response.split!(' ')
+			response = response.split(' ')
 			start = response[0]
 			finish = response[1]
 			if @active_player.include? @board[start.to_sym]
@@ -193,13 +198,13 @@ module Game
 
 		def possible_maneuver?(response)
 			#checks the piece's possible_maneuver? method in chess_pieces.rb
-			response.split!(' ')
+			response = response.split(' ')
 			return true if @board[response[0].to_sym].possible_maneuver?(response[1], @board)
 			return false
 		end
 
 		def check_yourself?(move, yourself, opponent)
-			move.split!(' ')
+			move = move.split(' ')
 			@board[move[1].to_sym] = @board[move[0].to_sym]
 			@board[move[0].to_sym] = nil
 			king = yourself.select { | piece | piece.is_a?(ChessPieces::King) }
@@ -216,11 +221,24 @@ module Game
 		def check_opponent?
 			king = @defending_player.select { | piece | piece.is_a?(ChessPieces::King) }
 			if all_possible_moves(@active_player).include?(king[0].position)
-				return true if all_possible_moves(@defending_player).any? { |move| !check_yourself?(move, @defending_player, @active_player) }
+				return true if all_possible_moves(@defending_player).any? { | move | !check_yourself?(move, @defending_player, @active_player) }
 				return "checkmate"
 			else
 				return false
 			end
+		end
+
+		def all_possible_moves(player)
+			spaces = @board.keys
+			spaces.collect! {| space | space.to_s}
+			possible_moves = []
+			player.each do | piece |
+				spaces.each do | space |
+					move = piece.position.to_s + " " + space
+					possible_moves << move if (own_piece?(move) && possible_maneuver?(move))
+				end
+			end
+			return possible_moves
 		end
 
 
@@ -268,3 +286,5 @@ module Game
 	end
 
 end
+
+Game::GamePlay.new
