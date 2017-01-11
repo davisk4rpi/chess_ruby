@@ -6,12 +6,13 @@ module Game
 
 	class GamePlay
 
-		attr_accessor :board, :active_player
+		attr_accessor :board, :active_player, :defending_player
 
 		def initialize
 			@board = GameBoard.new.board_hash
 			assign_players_pieces
 			@active_player = @player1_pieces
+			@defending_player = @player2_pieces
 			#introduction
 		end
 
@@ -75,17 +76,22 @@ module Game
 			move_piece(coordinates)
 			clear_screen
 			active_player_change
-			if check?
+			if check_opponent?
 				puts "Check!"
-			elsif check? == "checkmate"
+			elsif check_opponent? == "checkmate"
 				checkmate
 			end
 			new_turn
 		end
 
 		def active_player_change
-			@active_player = @player2_pieces if @active_player == @player1_pieces
-			@active_player = @player1_pieces if @active_player == @player2_pieces
+			if @active_player == @player1_pieces
+				@active_player = @player2_pieces
+				@defending_player = @player1_pieces
+			elsif @active_player == @player2_pieces
+				@active_player = @player1_pieces 
+				@defending_player = @player2_pieces
+			end
 		end
 
 		def board_view
@@ -149,7 +155,7 @@ module Game
 				puts "That piece cant move like that!"
 				return false
 			else
-				return true unless check?
+				return true unless check_yourself?(response, @active_player, @defending_player)
 				puts "You can't make a move that puts your King in check!"
 			end
 
@@ -192,9 +198,29 @@ module Game
 			return false
 		end
 
-		def check?
-			king = @active_player.select { | piece | piece.is_a?(ChessPieces::King) }
-			return king[0].is_a?(ChessPieces::King)
+		def check_yourself?(move, yourself, opponent)
+			move.split!(' ')
+			@board[move[1].to_sym] = @board[move[0].to_sym]
+			@board[move[0].to_sym] = nil
+			king = yourself.select { | piece | piece.is_a?(ChessPieces::King) }
+			if all_possible_moves(opponent).include?(king[0].position)
+				x = true
+			else
+				x = false
+			end
+			@board[move[0].to_sym] = @board[move[1].to_sym]
+			@board[move[1].to_sym] = nil
+			return x 
+		end
+
+		def check_opponent?
+			king = @defending_player.select { | piece | piece.is_a?(ChessPieces::King) }
+			if all_possible_moves(@active_player).include?(king[0].position)
+				return true if all_possible_moves(@defending_player).any? { |move| !check_yourself?(move, @defending_player, @active_player) }
+				return "checkmate"
+			else
+				return false
+			end
 		end
 
 
