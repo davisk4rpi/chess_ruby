@@ -6,7 +6,7 @@ module Game
 
 	class GamePlay
 
-		attr_accessor :board
+		attr_accessor :board, :active_player
 
 		def initialize
 			@board = GameBoard.new.board_hash
@@ -74,18 +74,18 @@ module Game
 			coordinates = response.split(' ')
 			move_piece(coordinates)
 			clear_screen
+			active_player_change
 			if check?
 				puts "Check!"
 			elsif check? == "checkmate"
 				checkmate
 			end
-			active_player_change
 			new_turn
 		end
 
 		def active_player_change
-			@active_player = @player2_pieces if active_player == @player1_pieces
-			@active_player = @player1_pieces if active_player == @player2_pieces
+			@active_player = @player2_pieces if @active_player == @player1_pieces
+			@active_player = @player1_pieces if @active_player == @player2_pieces
 		end
 
 		def board_view
@@ -124,9 +124,9 @@ module Game
 						 "  |ooooo     ooooo     ooooo     ooooo     |\n"
 			row0 = "\n" +
 						 "     a    b    c    d    e    f    g    h\n"
-		full_string = row9 + row8 + row7 + row6 + row5 + row4 + row3 + row2 + row1 + row0
-		full_string.gsub!("o", "\u2591")
-		puts full_string
+			full_string = row9 + row8 + row7 + row6 + row5 + row4 + row3 + row2 + row1 + row0
+			full_string.gsub!("o", "\u2591")
+			puts full_string
 		end
 
 		def valid_move?(response)
@@ -149,8 +149,10 @@ module Game
 				puts "That piece cant move like that!"
 				return false
 			else
-				return true
+				return true unless check?
+				puts "You can't make a move that puts your King in check!"
 			end
+
 		end
 
 		def proper_format?(response)
@@ -177,18 +179,24 @@ module Game
 			finish = response[1]
 			if @active_player.include? @board[start.to_sym]
 				return false if @active_player.include? @board[finish.to_sym]
+				return true
 			else
 				return false
 			end
-			return true
 		end
 
 		def possible_maneuver?(response)
 			#checks the piece's possible_maneuver? method in chess_pieces.rb
 			response.split!(' ')
-			return true if @board[response[0].to_sym].possible_maneuver?(response[1])
+			return true if @board[response[0].to_sym].possible_maneuver?(response[1], @board)
 			return false
 		end
+
+		def check?
+			king = @active_player.select { | piece | piece.is_a?(ChessPieces::King) }
+			return king[0].is_a?(ChessPieces::King)
+		end
+
 
 		def clear_screen
 			system "clear" or system "cls"

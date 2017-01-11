@@ -1,6 +1,6 @@
 module ChessPieces
 	
-		class Queen
+	class Queen
 
 		attr_accessor :position
 		attr_reader :marker
@@ -280,13 +280,9 @@ module ChessPieces
 			possible_moves << (letters[i+1] + numbers[j+1]) unless (i == 7 || j == 7)
 			possible_moves << (letters[i+1] + numbers[j-1]) unless (i == 7 || j == 0)
 			if possible_moves.include? coordinate.to_s
-				return true unless check?(coordinate)
+				return true
 			end
 			return false
-		end
-
-		def check?(coordinate)
-			false
 		end
 
 	end
