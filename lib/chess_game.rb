@@ -20,10 +20,10 @@ module Game
 			@player1_pieces = []
 			@player2_pieces = []
 			@board.each do | key, piece |
-				unless piece.nil?
-					if (key.to_s.include? '1') || (key.to_s.include? '2')
+				unless (piece.nil? || key == :last_moved)
+					if piece.color == 'white'
 						@player1_pieces << piece
-					elsif (key.to_s.include? '7') || (key.to_s.include? '8')
+					elsif piece.color == 'black'
 						@player2_pieces << piece
 					end
 				end
@@ -68,8 +68,8 @@ module Game
 			"To castle, type in 'long castle' or 'short castle' instead of the coordinates"
 			board_view
 			response = gets.chomp
+			clear_screen
 			unless valid_move?(response)
-				clear_screen
 				puts 'Pick a valid_move with the correct format'
 				return new_turn
 			end
@@ -80,14 +80,21 @@ module Game
 			end
 			coordinates = response.split(' ')
 			move_piece(coordinates)
-			clear_screen
-			active_player_change
 			if check_opponent?
 				puts "Check!"
 			elsif check_opponent? == "checkmate"
 				checkmate
 			end
+			active_player_change
 			new_turn
+		end
+
+		def move_piece(coordinates)
+			@board[:last_moved] = [@board[coordinates[0].to_sym], " " ]
+			@board[:last_moved] = [@board[coordinates[0].to_sym], "double_square" ] if (coordinates[0][1].to_i - coordinates[1][1].to_i).abs == 2
+			@board[coordinates[1].to_sym] = @board[coordinates[0].to_sym]
+			@board[coordinates[1].to_sym].position = coordinates[1].to_sym
+			@board[coordinates[0].to_sym] = nil
 		end
 
 		def active_player_change
@@ -104,8 +111,10 @@ module Game
 			#design for easy understanding/view over minimalist algorithm
 			x = {}
 			@board.each do | key, gamepiece |
-				x[key] = gamepiece.marker unless gamepiece.nil?
-				x[key] = " " if gamepiece.nil?
+				unless key == :last_moved
+					x[key] = gamepiece.marker unless gamepiece.nil?
+					x[key] = " " if gamepiece.nil?
+				end
 			end
 
 			row9 = "\n     a    b    c    d    e    f    g    h\n" +
@@ -143,10 +152,7 @@ module Game
 
 		def valid_move?(response)
 			clear_screen
-			if !proper_format?(response)
-				puts "Check your formatting!"
-				return false
-
+			if proper_format?(response)
 				#castling is always on board and not an attack
 				if response == "long castle" || response == "short castle"
 				elsif !on_board?(response)
@@ -156,14 +162,16 @@ module Game
 					puts "You can't move pieces you don't have and you can't attack your own pieces!"
 					return false
 				end
-
-			elsif !possible_maneuver?(response)
-				puts "That piece cant move like that!"
-				return false
 			else
-				return true
+				puts "Check your formatting!"
+				return false
 			end
 
+			if !possible_maneuver?(response)
+				puts "That piece cant move like that!"
+				return false
+			end
+			return true
 		end
 
 		def proper_format?(response)
@@ -184,12 +192,12 @@ module Game
 			return true
 		end
 
-		def own_piece?(response)
+		def own_piece?(response, player = @active_player)
 			response = response.split(' ')
 			start = response[0]
 			finish = response[1]
-			if @active_player.include? @board[start.to_sym]
-				return false if @active_player.include? @board[finish.to_sym]
+			if player.include? @board[start.to_sym]
+				return false if player.include? @board[finish.to_sym]
 				return true
 			else
 				return false
@@ -204,11 +212,13 @@ module Game
 		end
 
 		def check_yourself?(move, yourself, opponent)
+			p move
 			move = move.split(' ')
+			p "move: #{move}"
 			@board[move[1].to_sym] = @board[move[0].to_sym]
 			@board[move[0].to_sym] = nil
 			king = yourself.select { | piece | piece.is_a?(ChessPieces::King) }
-			if all_possible_moves(opponent).include?(king[0].position)
+			if all_possible_moves(opponent).any?{ | move | move[-2, -1] == king[0].position.to_s }
 				x = true
 			else
 				x = false
@@ -220,10 +230,13 @@ module Game
 
 		def check_opponent?
 			king = @defending_player.select { | piece | piece.is_a?(ChessPieces::King) }
-			if all_possible_moves(@active_player).include?(king[0].position)
+			spaces = all_possible_moves(@active_player).collect { | move | move[-2, 2] }
+			p spaces
+			if spaces.any?{ | space | space == king[0].position.to_s }
 				return true if all_possible_moves(@defending_player).any? { | move | !check_yourself?(move, @defending_player, @active_player) }
 				return "checkmate"
 			else
+				p all_possible_moves(@active_player)
 				return false
 			end
 		end
@@ -235,7 +248,7 @@ module Game
 			player.each do | piece |
 				spaces.each do | space |
 					move = piece.position.to_s + " " + space
-					possible_moves << move if (own_piece?(move) && possible_maneuver?(move))
+					possible_moves << move if (on_board?(move) && own_piece?(move, player) && possible_maneuver?(move))
 				end
 			end
 			return possible_moves

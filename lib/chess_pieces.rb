@@ -3,7 +3,7 @@ module ChessPieces
 	class Queen
 
 		attr_accessor :position
-		attr_reader :marker
+		attr_reader :marker, :color
 
 		def initialize(position)
 			@position = position
@@ -18,8 +18,13 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2655" if position.to_s.include? "1" #white
-			return "\u265B" if position.to_s.include? "8" #black
+			if position.to_s.include? "1" #white
+				@color = "white"
+				return "\u2655" 
+			elsif position.to_s.include? "8" #black
+				@color = "black"
+				return "\u265B" 
+			end
 		end
 
 		def diagonal?(coordinate, board)
@@ -45,6 +50,7 @@ module ChessPieces
 		end
 
 		def vertical?(coordinate, board)
+			return false if coordinate == @position.to_s
 			if coordinate[0] == @position[0]
 				array = (position[1]...coordinate[1]).to_a if position[1] < coordinate[1]
 				array2 = (coordinate[1]..position[1]).to_a.reverse
@@ -62,6 +68,7 @@ module ChessPieces
 		end
 
 		def horizontal?(coordinate, board)
+			return false if coordinate == @position.to_s
 			if coordinate[1] == @position[1]
 				array = (position[0]...coordinate[0]).to_a if position[0] < coordinate[0]
 				array2 = (coordinate[0]..position[0]).to_a.reverse
@@ -83,7 +90,7 @@ module ChessPieces
 	class Pawn
 
 		attr_accessor :position
-		attr_reader :marker
+		attr_reader :marker, :color
 
 		def initialize(position)
 			@position = position
@@ -110,8 +117,13 @@ module ChessPieces
 		end
 
 		def marker_color
-			return "\u2659" if @position.to_s.include? "2" #white
-			return "\u265F" if @position.to_s.include? "7" #black
+			if @position.to_s.include? "2" #white
+				@color = "white"
+				return "\u2659" 
+			elsif @position.to_s.include? "7" #black
+				@color = "black"
+				return "\u265F" 
+			end
 		end
 
 		def single_square?(coordinate, board)
@@ -152,8 +164,9 @@ module ChessPieces
 
 		def attack?(coordinate, board)
 			unless board[coordinate.to_sym].nil?
-				return true if (((@position[0] == coordinate[0].succ) || (@position[0].succ == coordinate[0])) && 
-											 (@position[1].to_i + (1 * @direction)  == coordinate[1].to_i))
+				return true if (((@position[0] == coordinate[0].succ) || 
+											 (@position[0].succ == coordinate[0])) && 
+											 ((@position[1].to_i + (1 * @direction))  == coordinate[1].to_i))
 			end
 			return false
 		end
@@ -163,7 +176,7 @@ module ChessPieces
 	class Rook < Queen
 
 		attr_accessor :position
-		attr_reader :marker
+		attr_reader :marker, :color
 
 		def initialize(position)
 			@position = position
@@ -178,15 +191,20 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2656" if position.to_s.include? "1" #white
-			return "\u265C" if position.to_s.include? "8" #black
+			if position.to_s.include? "1" #white
+				@color = "white"
+				return "\u2656" 
+			elsif position.to_s.include? "8" #black
+				@color = "black"
+				return "\u265C" 
+			end
 		end
 	end
 
 	class Knight
 
 		attr_accessor :position
-		attr_reader :marker
+		attr_reader :marker, :color
 
 		def initialize(position)
 			@position = position
@@ -199,8 +217,13 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2658" if position.to_s.include? "1" #white
-			return "\u265E" if position.to_s.include? "8" #black
+			if position.to_s.include? "1" #white
+				@color = "white"
+				return "\u2658" 
+			elsif position.to_s.include? "8" #black
+				@color = "black"
+				return "\u265E" 
+			end
 		end
 
 		def jump?(coordinate)
@@ -226,7 +249,7 @@ module ChessPieces
 	class Bishop < Queen
 
 		attr_accessor :position
-		attr_reader :marker
+		attr_reader :marker, :color
 
 		def initialize(position)
 			@position = position
@@ -239,15 +262,20 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2657" if position.to_s.include? "1" #white
-			return "\u265D" if position.to_s.include? "8" #black
+			if position.to_s.include? "1" #white
+				@color = "white"
+				return "\u2657" 
+			elsif position.to_s.include? "8" #black
+				@color = "black"
+				return "\u265D" 
+			end	
 		end
 	end
 
 	class King
 
 		attr_accessor :position
-		attr_reader :marker
+		attr_reader :marker, :color
 
 		def initialize(position)
 			@position = position
@@ -261,8 +289,13 @@ module ChessPieces
 		end
 
 		def marker_color(position)
-			return "\u2654" if position.to_s.include? "1" #white
-			return "\u265A" if position.to_s.include? "8" #black
+			if position.to_s.include? "1" #white
+				@color = "white"
+				return "\u2654" 
+			elsif position.to_s.include? "8" #black
+				@color = "black"
+				return "\u265A" 
+			end
 		end
 
 		def single_square?(coordinate, board)
