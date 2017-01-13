@@ -11,6 +11,7 @@ module Game
 		def initialize
 			@board = GameBoard.new.board_hash
 			assign_players_pieces
+			@active_player_name = "Player 1"
 			@active_player = @player1_pieces
 			@defending_player = @player2_pieces
 			introduction
@@ -64,8 +65,9 @@ module Game
 		end
 
 		def new_turn
-			puts "Enter your move with the following format: Starting Coordinate Ending Coordinates... ex: 'a2 a4'\n"
-			"To castle, type in 'long castle' or 'short castle' instead of the coordinates"
+			puts "Enter your move with the following format: Starting Coordinate Ending Coordinates... ex: 'a2 a4'\n" +
+			"To castle, type in 'long castle' or 'short castle' instead of the coordinates\n" + 
+			"#{@active_player_name}, your turn."
 			board_view
 			response = gets.chomp
 			clear_screen
@@ -101,9 +103,11 @@ module Game
 			if @active_player == @player1_pieces
 				@active_player = @player2_pieces
 				@defending_player = @player1_pieces
+				@active_player_name = "Player 2"
 			elsif @active_player == @player2_pieces
 				@active_player = @player1_pieces 
 				@defending_player = @player2_pieces
+				@active_player_name = "Player 1"
 			end
 		end
 
