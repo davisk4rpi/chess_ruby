@@ -75,15 +75,15 @@ module Game
 			end
 			if check_yourself?(response, @active_player, @defending_player)
 				clear_screen
-				puts "You can't make a move that puts your King in check!"
+				puts "You can't make a move that leaves your King in check!"
 				return new_turn
 			end
 			coordinates = response.split(' ')
 			move_piece(coordinates)
-			if check_opponent?
-				puts "Check!"
-			elsif check_opponent? == "checkmate"
+			if check_opponent? == "checkmate"
 				checkmate
+			elsif check_opponent? 
+				puts "Check!"
 			end
 			active_player_change
 			new_turn
@@ -212,42 +212,41 @@ module Game
 		end
 
 		def check_yourself?(move, yourself, opponent)
-			p move
 			move = move.split(' ')
-			p "move: #{move}"
+			temp = @board[move[1].to_sym]
 			@board[move[1].to_sym] = @board[move[0].to_sym]
 			@board[move[0].to_sym] = nil
+			@board[move[1].to_sym].position = move[1].to_sym
 			king = yourself.select { | piece | piece.is_a?(ChessPieces::King) }
-			if all_possible_moves(opponent).any?{ | move | move[-2, -1] == king[0].position.to_s }
+			if all_possible_moves(opponent).any?{ | opp_move | opp_move[-2, 2] == king[0].position.to_s }
 				x = true
 			else
 				x = false
 			end
 			@board[move[0].to_sym] = @board[move[1].to_sym]
-			@board[move[1].to_sym] = nil
+			@board[move[1].to_sym] = temp
+			@board[move[0].to_sym].position = move[0].to_sym
 			return x 
 		end
 
 		def check_opponent?
 			king = @defending_player.select { | piece | piece.is_a?(ChessPieces::King) }
 			spaces = all_possible_moves(@active_player).collect { | move | move[-2, 2] }
-			p spaces
 			if spaces.any?{ | space | space == king[0].position.to_s }
-				return true if all_possible_moves(@defending_player).any? { | move | !check_yourself?(move, @defending_player, @active_player) }
+				return true unless all_possible_moves(@defending_player).all? { | move | check_yourself?(move, @defending_player, @active_player) }
 				return "checkmate"
 			else
-				p all_possible_moves(@active_player)
 				return false
 			end
 		end
 
 		def all_possible_moves(player)
 			spaces = @board.keys
-			spaces.collect! {| space | space.to_s}
+			spaces.collect! { | space | space.to_s}
 			possible_moves = []
 			player.each do | piece |
 				spaces.each do | space |
-					move = piece.position.to_s + " " + space
+					move = piece.position.to_s + ' ' + space
 					possible_moves << move if (on_board?(move) && own_piece?(move, player) && possible_maneuver?(move))
 				end
 			end
