@@ -212,11 +212,17 @@ module Game
 			#checks the piece's possible_maneuver? method in chess_pieces.rb
 			response = response.split(' ')
 			if response[1] == "castle"
-				return true if castle_valid?(response) == true
+				return true if castle_valid?(response)
 			end
 			return true if @board[response[0].to_sym].possible_maneuver?(response[1], @board)
 			return false
 		end
+
+		def castle_valid?(response)
+			king = @active_player.select { | piece | piece.is_a?(ChessPieces::King) }
+			return king[0].castle?(response[0])
+		end
+
 
 		def check_yourself?(move, yourself, opponent)
 			move = move.split(' ')
@@ -259,7 +265,6 @@ module Game
 			end
 			return possible_moves
 		end
-
 
 		def clear_screen
 			system "clear" or system "cls"
