@@ -275,7 +275,7 @@ module ChessPieces
 	class King
 
 		attr_accessor :position
-		attr_reader :marker, :color
+		attr_reader :marker, :color, :long, :short
 
 		def initialize(position)
 			@position = position
@@ -318,6 +318,15 @@ module ChessPieces
 			return false
 		end
 
+		def castle?(type)
+			return false unless @initial == @position
+			if type == "long"
+				return false unless @long.initial == @long.position
+				return true
+			elsif type == "short"
+				return false unless @short.initial == @short.position
+				return true
+			end
 	end
 
 end
