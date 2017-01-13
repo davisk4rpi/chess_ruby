@@ -14,7 +14,7 @@ module Game
 			@active_player_name = "Player 1"
 			@active_player = @player1_pieces
 			@defending_player = @player2_pieces
-			introduction
+			#introduction
 		end
 
 		def assign_players_pieces
@@ -220,7 +220,7 @@ module Game
 
 		def castle_valid?(response)
 			king = @active_player.select { | piece | piece.is_a?(ChessPieces::King) }
-			return king[0].castle?(response[0])
+			return king[0].castle?(response[0], @board)
 		end
 
 

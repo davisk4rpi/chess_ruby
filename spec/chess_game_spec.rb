@@ -67,13 +67,6 @@ describe Game do
 				expect(game.own_piece?('h7 h8')).to be false
 			end
 		end"""
-
-		describe '.check?' do 
-			it 'returns true or false' do
-				expect(game.check?).to be true
-			end
-		end
-
 	end
 
 end

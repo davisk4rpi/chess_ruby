@@ -150,6 +150,21 @@ describe ChessPieces do
 				expect(board[:a4].single_square?(:a7, board)).to be false
 			end
 		end
+
+		describe ".castle" do 
+			it 'returns true or false' do 
+				#board[:e1].find_short(board)
+				expect(board[:e1].castle?("short", board)).to be true
+				#board[:e1].find_long(board)
+				expect(board[:e1].castle?("long", board)).to be true
+				board[:h1] = nil
+				#board[:e1].find_short(board)
+				expect(board[:e1].castle?("short", board)).to be false
+				board[:a1] = ChessPieces::Bishop.new(:h1)
+				#board[:e1].find_long(board)
+				expect(board[:e1].castle?("long", board)).to be false
+			end
+		end
 	end
 
 end

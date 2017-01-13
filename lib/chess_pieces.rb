@@ -176,7 +176,7 @@ module ChessPieces
 	class Rook < Queen
 
 		attr_accessor :position
-		attr_reader :marker, :color
+		attr_reader :marker, :color, :initial
 
 		def initialize(position)
 			@position = position
@@ -275,12 +275,14 @@ module ChessPieces
 	class King
 
 		attr_accessor :position
-		attr_reader :marker, :color, :long, :short
+		attr_reader :marker, :color, :long, :short, :initial
 
 		def initialize(position)
 			@position = position
 			@initial = position
 			@marker = marker_color(position)
+			@letters = ("a".."h").to_a
+			@numbers = ("1".."8").to_a
 		end
 
 		def possible_maneuver?(coordinate, board)
@@ -299,34 +301,51 @@ module ChessPieces
 		end
 
 		def single_square?(coordinate, board)
-			letters = ("a".."h").to_a
-			numbers = ("1".."8").to_a
-			i = letters.index(@position[0])
-			j = numbers.index(@position[1])
+			i = @letters.index(@position[0])
+			j = @numbers.index(@position[1])
 			possible_moves = []
-			possible_moves << (letters[i-1] + numbers[j]) unless (i == 0)
-			possible_moves << (letters[i-1] + numbers[j+1]) unless (i == 0 || j >= 7)
-			possible_moves << (letters[i-1] + numbers[j-1]) unless (i == 0 || j <= 0)
-			possible_moves << (letters[i] + numbers[j+1]) unless (j == 7)
-			possible_moves << (letters[i] + numbers[j-1]) unless (j == 0)
-			possible_moves << (letters[i+1] + numbers[j]) unless (i == 7)
-			possible_moves << (letters[i+1] + numbers[j+1]) unless (i == 7 || j == 7)
-			possible_moves << (letters[i+1] + numbers[j-1]) unless (i == 7 || j == 0)
+			possible_moves << (@letters[i-1] + @numbers[j]) unless (i == 0)
+			possible_moves << (@letters[i-1] + @numbers[j+1]) unless (i == 0 || j >= 7)
+			possible_moves << (@letters[i-1] + @numbers[j-1]) unless (i == 0 || j <= 0)
+			possible_moves << (@letters[i] + @numbers[j+1]) unless (j == 7)
+			possible_moves << (@letters[i] + @numbers[j-1]) unless (j == 0)
+			possible_moves << (@letters[i+1] + @numbers[j]) unless (i == 7)
+			possible_moves << (@letters[i+1] + @numbers[j+1]) unless (i == 7 || j == 7)
+			possible_moves << (@letters[i+1] + @numbers[j-1]) unless (i == 7 || j == 0)
 			if possible_moves.include? coordinate.to_s
 				return true
 			end
 			return false
 		end
 
-		def castle?(type)
+		def castle?(type, board)
+			find_short(board)
+			find_long(board)
 			return false unless @initial == @position
 			if type == "long"
-				return false unless @long.initial == @long.position
+				return false if @long.nil?
 				return true
 			elsif type == "short"
-				return false unless @short.initial == @short.position
+				return false if @short.nil?
 				return true
 			end
+		end
+
+		def find_short(board)
+			coordinate = :h1 if @color == "white"
+			coordinate = :h8 if @color == "black"
+			@short = nil
+			@short = board[coordinate] if (board[coordinate].class == ChessPieces::Rook && 
+																		board[coordinate].initial == board[coordinate].position)
+		end
+
+		def find_long(board)
+			coordinate = :a1 if @color == "white"
+			coordinate = :a8 if @color == "black"
+			@long = nil
+			@long = board[coordinate] if (board[coordinate].is_a?(Rook) && 
+																		board[coordinate].initial == board[coordinate].position)
+		end
 	end
 
 end
