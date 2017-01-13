@@ -211,6 +211,9 @@ module Game
 		def possible_maneuver?(response)
 			#checks the piece's possible_maneuver? method in chess_pieces.rb
 			response = response.split(' ')
+			if response[1] == "castle"
+				return true if castle_valid?(response) == true
+			end
 			return true if @board[response[0].to_sym].possible_maneuver?(response[1], @board)
 			return false
 		end
