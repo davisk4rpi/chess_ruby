@@ -220,7 +220,10 @@ module Game
 
 		def castle_valid?(response)
 			king = @active_player.select { | piece | piece.is_a?(ChessPieces::King) }
-			return king[0].castle?(response[0], @board)
+			if king[0].castle?(response[0], @board)
+				return true if path_clear?
+			end
+			return false
 		end
 
 
