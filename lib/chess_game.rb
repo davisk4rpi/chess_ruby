@@ -94,12 +94,36 @@ module Game
 		end
 
 		def move_piece(coordinates)
-			
-			@board[:last_moved] = [@board[coordinates[0].to_sym], " " ]
-			@board[:last_moved] = [@board[coordinates[0].to_sym], "double_square" ] if (coordinates[0][1].to_i - coordinates[1][1].to_i).abs == 2
-			@board[coordinates[1].to_sym] = @board[coordinates[0].to_sym]
-			@board[coordinates[1].to_sym].position = coordinates[1].to_sym
-			@board[coordinates[0].to_sym] = nil
+			if coordinates[1] == 'castle'
+				castle_move_pieces(coordinates)
+			else
+				@board[:last_moved] = [@board[coordinates[0].to_sym], " " ]
+				@board[:last_moved] = [@board[coordinates[0].to_sym], "double_square" ] if (coordinates[0][1].to_i - coordinates[1][1].to_i).abs == 2
+				@board[coordinates[1].to_sym] = @board[coordinates[0].to_sym]
+				@board[coordinates[1].to_sym].position = coordinates[1].to_sym
+				@board[coordinates[0].to_sym] = nil
+			end
+		end
+
+		def castle_move_pieces(coordinates)
+			#old position
+			king_start_position = @active_player_name == "Player 1" ? :e1 : :e8
+			rook_start_letter = coordinates[0] == "short" ? 'h' : 'a'
+			number = @active_player_name == "Player 1" ? '1' : '8'
+			rook_start_position = (rook_start_letter + number).to_sym
+			#new position
+			king_new_letter = coordinates[0] == "short" ? 'g' : 'c'
+			rook_new_letter = coordinates[0] == "short" ? 'f' : 'd'
+			king_new_position = (king_new_letter + number).to_sym
+			rook_new_position = (rook_new_letter + number).to_sym
+			#update board
+			@board[king_new_position] = @board[king_start_position]
+			@board[king_new_position].position = king_new_position
+			@board[king_start_position] = nil
+			@board[rook_new_position] = @board[rook_start_position]
+			@board[rook_new_position].position = rook_new_position
+			@board[rook_start_position] = nil
+			@board[:last_moved] = [@board[king_new_position], " " ]
 		end
 
 		def active_player_change
@@ -234,15 +258,15 @@ module Game
 		def path_clear?(response)
 			if @active_player_name == "Player 1"
 				if response == 'long'
-					return all_possible_moves(@defending_player).none?{ | opp_move | ['b1', 'c1', 'd1'].include? opp_move[-2, 2] }
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['b1', 'c1', 'd1', 'e1'].include? opp_move[-2, 2] }
 				elsif response == 'short'
-					return all_possible_moves(@defending_player).none?{ | opp_move | ['f1', 'g1'].include? opp_move[-2, 2] }
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['e1', 'f1', 'g1'].include? opp_move[-2, 2] }
 				end
 			elsif @active_player_name == "Player 2"
 				if response == 'long'
-					return all_possible_moves(@defending_player).none?{ | opp_move | ['b8', 'c8', 'd8'].include? opp_move[-2, 2] }
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['b8', 'c8', 'd8', 'e8'].include? opp_move[-2, 2] }
 				elsif response == 'short'
-					return all_possible_moves(@defending_player).none?{ | opp_move | ['f8', 'g8'].include? opp_move[-2, 2] }
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['e8', 'f8', 'g8'].include? opp_move[-2, 2] }
 				end
 			end
 			return false
