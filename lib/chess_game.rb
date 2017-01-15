@@ -97,6 +97,11 @@ module Game
 			if coordinates[1] == 'castle'
 				castle_move_pieces(coordinates)
 			else
+				if @board[coordinates[0].to_sym].is_a?(ChessPieces::Pawn) && @board[coordinates[0].to_sym].en_passant?(coordinates[1], @board)
+					p "En Passant... ooh lala"
+					victim_position = (coordinates[1][0] + coordinates[0][1]).to_sym
+					@board[victim_position] = nil
+				end
 				@board[:last_moved] = [@board[coordinates[0].to_sym], " " ]
 				@board[:last_moved] = [@board[coordinates[0].to_sym], "double_square" ] if (coordinates[0][1].to_i - coordinates[1][1].to_i).abs == 2
 				@board[coordinates[1].to_sym] = @board[coordinates[0].to_sym]
@@ -251,21 +256,25 @@ module Game
 			if king[0].castle?(response, @board)
 				return true if path_clear?(response)
 			end
-			p "castle not valid apparently"
+			p "Castle not valid, make sure that the path is clear and \nyour king wont be ambushed along the way"
 			return false
 		end
 
 		def path_clear?(response)
 			if @active_player_name == "Player 1"
 				if response == 'long'
+					return false unless ['b1', 'c1', 'd1'].all?{ | space | @board[space.to_sym].nil? }
 					return all_possible_moves(@defending_player).none?{ | opp_move | ['b1', 'c1', 'd1', 'e1'].include? opp_move[-2, 2] }
 				elsif response == 'short'
+					return false unless ['f1', 'g1'].all?{ | space | @board[space.to_sym].nil? }
 					return all_possible_moves(@defending_player).none?{ | opp_move | ['e1', 'f1', 'g1'].include? opp_move[-2, 2] }
 				end
 			elsif @active_player_name == "Player 2"
 				if response == 'long'
+					return false unless ['b8', 'c8', 'd8'].all?{ | space | @board[space.to_sym].nil? }
 					return all_possible_moves(@defending_player).none?{ | opp_move | ['b8', 'c8', 'd8', 'e8'].include? opp_move[-2, 2] }
 				elsif response == 'short'
+					return false unless ['f8', 'g8'].all?{ | space | @board[space.to_sym].nil? }
 					return all_possible_moves(@defending_player).none?{ | opp_move | ['e8', 'f8', 'g8'].include? opp_move[-2, 2] }
 				end
 			end
