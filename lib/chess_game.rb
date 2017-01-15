@@ -14,7 +14,7 @@ module Game
 			@active_player_name = "Player 1"
 			@active_player = @player1_pieces
 			@defending_player = @player2_pieces
-			#introduction
+			introduction
 		end
 
 		def assign_players_pieces
@@ -75,7 +75,9 @@ module Game
 				puts 'Pick a valid_move with the correct format'
 				return new_turn
 			end
-			if check_yourself?(response, @active_player, @defending_player)
+			if response[-6, 6] == 'castle'
+				puts "Castle!"
+			elsif check_yourself?(response, @active_player, @defending_player)
 				clear_screen
 				puts "You can't make a move that leaves your King in check!"
 				return new_turn
@@ -92,6 +94,7 @@ module Game
 		end
 
 		def move_piece(coordinates)
+			
 			@board[:last_moved] = [@board[coordinates[0].to_sym], " " ]
 			@board[:last_moved] = [@board[coordinates[0].to_sym], "double_square" ] if (coordinates[0][1].to_i - coordinates[1][1].to_i).abs == 2
 			@board[coordinates[1].to_sym] = @board[coordinates[0].to_sym]
@@ -212,7 +215,8 @@ module Game
 			#checks the piece's possible_maneuver? method in chess_pieces.rb
 			response = response.split(' ')
 			if response[1] == "castle"
-				return true if castle_valid?(response)
+				return true if castle_valid?(response[0])
+				return false
 			end
 			return true if @board[response[0].to_sym].possible_maneuver?(response[1], @board)
 			return false
@@ -220,12 +224,29 @@ module Game
 
 		def castle_valid?(response)
 			king = @active_player.select { | piece | piece.is_a?(ChessPieces::King) }
-			if king[0].castle?(response[0], @board)
-				return true if path_clear?
+			if king[0].castle?(response, @board)
+				return true if path_clear?(response)
 			end
+			p "castle not valid apparently"
 			return false
 		end
 
+		def path_clear?(response)
+			if @active_player_name == "Player 1"
+				if response == 'long'
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['b1', 'c1', 'd1'].include? opp_move[-2, 2] }
+				elsif response == 'short'
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['f1', 'g1'].include? opp_move[-2, 2] }
+				end
+			elsif @active_player_name == "Player 2"
+				if response == 'long'
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['b8', 'c8', 'd8'].include? opp_move[-2, 2] }
+				elsif response == 'short'
+					return all_possible_moves(@defending_player).none?{ | opp_move | ['f8', 'g8'].include? opp_move[-2, 2] }
+				end
+			end
+			return false
+		end
 
 		def check_yourself?(move, yourself, opponent)
 			move = move.split(' ')
