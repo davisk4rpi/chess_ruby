@@ -84,6 +84,7 @@ module Game
 			end
 			coordinates = response.split(' ')
 			move_piece(coordinates)
+			promote_pawn(coordinates[1]) if promotion?(coordinates[1])
 			if check_opponent? == "checkmate"
 				checkmate
 			elsif check_opponent? 
@@ -129,6 +130,14 @@ module Game
 			@board[rook_new_position].position = rook_new_position
 			@board[rook_start_position] = nil
 			@board[:last_moved] = [@board[king_new_position], " " ]
+		end
+
+		def promotion?(space)
+			return true if ['1', '8'].include space[1] && @board[space.to_sym].is_a?(ChessPieces::Pawn)
+		end
+
+		def promote_pawn(space)
+
 		end
 
 		def active_player_change
