@@ -6,6 +6,8 @@ module Game
 
 	class GamePlay
 
+		include ChessPieces
+
 		attr_accessor :board, :active_player, :defending_player
 
 		def initialize
@@ -71,10 +73,13 @@ module Game
 			board_view
 			response = gets.chomp
 			clear_screen
+
 			unless valid_move?(response)
 				puts 'Pick a valid_move with the correct format'
 				return new_turn
 			end
+
+			#castling
 			if response[-6, 6] == 'castle'
 				puts "Castle!"
 			elsif check_yourself?(response, @active_player, @defending_player)
@@ -82,9 +87,17 @@ module Game
 				puts "You can't make a move that leaves your King in check!"
 				return new_turn
 			end
+
 			coordinates = response.split(' ')
 			move_piece(coordinates)
-			promote_pawn(coordinates[1]) if promotion?(coordinates[1])
+
+			#Pawn Promotion cycle
+			if promotion?(coordinates[1])
+				puts "promoted"
+				promote_pawn(coordinates[1]) 
+			end
+
+			#check
 			if check_opponent? == "checkmate"
 				checkmate
 			elsif check_opponent? 
@@ -133,19 +146,36 @@ module Game
 		end
 
 		def promotion?(space)
-			return true if ['1', '8'].include space[1] && @board[space.to_sym].is_a?(ChessPieces::Pawn)
+			return true if ((['1', '8'].include? space[1]) && (@board[space.to_sym].is_a?(ChessPieces::Pawn)))
 		end
 
 		def promote_pawn(space)
-
+			board_view
+			adjustment = space[1] == '8' ? '1' : '8'
+			color_picker = (space[0] + adjustment).to_sym
+			puts "Please choose from the following options and hit enter once you have typed it in.\n" +
+					 "Rook, Knight, Bishop, Queen"
+			choice = gets.chomp.downcase
+			
+			case choice
+			when "rook" then @board[space.to_sym] = Rook.new(color_picker)
+			when "knight" then @board[space.to_sym] = Knight.new(color_picker)
+			when "bishop" then @board[space.to_sym] = Bishop.new(color_picker)
+			when "queen" then @board[space.to_sym] = Queen.new(color_picker)
+			else 
+				puts "Use the right format"
+				promote_pawn(space)
+			end
+			@board[space.to_sym].position = space.to_sym
+			clear_screen
 		end
 
 		def active_player_change
-			if @active_player == @player1_pieces
+			if @active_player_name == "Player 1"
 				@active_player = @player2_pieces
 				@defending_player = @player1_pieces
 				@active_player_name = "Player 2"
-			elsif @active_player == @player2_pieces
+			elsif @active_player_name == "Player 2"
 				@active_player = @player1_pieces 
 				@defending_player = @player2_pieces
 				@active_player_name = "Player 1"
@@ -309,6 +339,8 @@ module Game
 		end
 
 		def check_opponent?
+			assign_players_pieces
+			2.times {active_player_change}
 			king = @defending_player.select { | piece | piece.is_a?(ChessPieces::King) }
 			spaces = all_possible_moves(@active_player).collect { | move | move[-2, 2] }
 			if spaces.any?{ | space | space == king[0].position.to_s }
