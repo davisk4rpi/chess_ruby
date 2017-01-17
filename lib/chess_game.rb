@@ -73,7 +73,7 @@ module Game
 			"#{@active_player_name}, your turn."
 			board_view
 			response = gets.chomp
-			save_game if response.downcase == 'save'
+			name_save_game if response.downcase == 'save'
 			clear_screen
 
 			unless valid_move?(response)
@@ -109,11 +109,34 @@ module Game
 			new_turn
 		end
 
-		def save_game
+		def name_save_game
 			puts "What name would you like to use to save the game?"
 			name = gets.chomp
-			serialize_game_board(name)
+			game_json = serialize_game_board(name)
+			save_game(game_json)
 			exit_game
+		end
+
+		def serialize_game_board(name)
+			assign_players_pieces
+			@player1_pieces_json = {}
+			@player2_pieces_json = {}
+			pieces_to_json(@player1_pieces, @player1_pieces_json)
+			pieces_to_json(@player2_pieces, @player2_pieces_json)
+			saved_game = {'name' => name,
+										'active player' => active_player_name,
+										'player 1' => @player1_pieces_json,
+										'player 2' => @player2_pieces_json}
+			return saved_game
+		end
+
+		def pieces_to_json (player_pieces, json_hash)
+			player_pieces.each do | piece |
+				json_hash[piece.class] = {'position' => piece.position.to_s,
+															 	 'marker' => piece.marker, 
+																 'color' => piece.color, 
+																 'initial' => piece.initial.to_s}
+			end
 		end
 
 		def move_piece(coordinates)
