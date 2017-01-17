@@ -141,7 +141,9 @@ module Game
 		end
 
 		def save_game(json_hash)
-			print json_hash
+			save_file = File.open("saved_games/saved_games.json", "a")
+			save_file.puts json_hash
+			save_file.close
 		end
 
 		def move_piece(coordinates)
