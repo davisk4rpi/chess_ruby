@@ -80,6 +80,40 @@ module Game
 			load_saved_game(response)
 		end
 
+		def load_saved_game(response)
+			@board.each{ | space, piece | @board[space] = nil }
+			game = @games[response]
+			@active_player_name = game["active_player"]
+			fill_loaded_board("player_1", game)
+			fill_loaded_board("player_2", game)
+			board_view
+			exit
+		end
+
+		def fill_loaded_board(player, game)
+			game[player].each do | space, variable |
+				piece = variable['class']
+				case piece[13..-1]
+				when "Pawn"
+					@board[space.to_sym] = Pawn.new(space.to_sym)
+				when "Rook"
+					@board[space.to_sym] = Rook.new(space.to_sym)
+				when "Knight"
+					@board[space.to_sym] = Knight.new(space.to_sym)
+				when "Bishop"
+					@board[space.to_sym] = Bishop.new(space.to_sym)
+				when "Queen"
+					@board[space.to_sym] = Queen.new(space.to_sym)
+				when "King"
+					@board[space.to_sym] = King.new(space.to_sym)
+				else
+				end
+				@board[space.to_sym].marker = variable["marker"]
+				@board[space.to_sym].color = variable["color"]
+				@board[space.to_sym].initial = variable["initial"].to_sym
+			end
+		end
+
 		def new_game
 			clear_screen
 			puts "Player 1 goes first,"
@@ -152,10 +186,10 @@ module Game
 
 		def pieces_to_json (player_pieces, json_hash)
 			player_pieces.each do | piece |
-				json_hash[piece.class] = {:position => piece.position.to_s,
-															 	 :marker => piece.marker, 
-																 :color => piece.color, 
-																 :initial => piece.initial.to_s}
+				json_hash[piece.position.to_s] = {:class => piece.class,
+															 						:marker => piece.marker, 
+																 					:color => piece.color, 
+																 					:initial => piece.initial.to_s}
 			end
 		end
 
@@ -353,7 +387,7 @@ module Game
 			if king[0].castle?(response, @board)
 				return true if path_clear?(response)
 			end
-			p "Castle not valid, make sure that the path is clear and \nyour king wont be ambushed along the way"
+			puts "Castle not valid, make sure that the path is clear and \nyour king wont be ambushed along the way"
 			return false
 		end
 
@@ -428,7 +462,7 @@ module Game
 
 		def exit_game
 			puts "Enter 1 to start over, anything else exits the game"
-			exit unless gets.chomp == 1
+			exit unless gets.chomp == '1'
 			GamePlay.new
 		end
 
