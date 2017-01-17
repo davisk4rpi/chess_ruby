@@ -407,6 +407,12 @@ module Game
 			system "clear" or system "cls"
 		end
 
+		def exit_game
+			puts "Enter 1 to start over, anything else exits the game"
+			exit unless gets.chomp == 1
+			GamePlay.new
+		end
+
 	end
 
 	class GameBoard
