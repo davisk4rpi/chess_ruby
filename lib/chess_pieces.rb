@@ -100,9 +100,9 @@ module ChessPieces
 		end
 
 		def pick_direction
-			if @initial[1] == '2'
+			if @color == 'white'
 				@direction = 1
-			elsif @initial[1] == '7'
+			elsif @color == 'black'
 				@direction = -1
 			end			
 		end
