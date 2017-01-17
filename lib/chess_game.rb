@@ -86,8 +86,10 @@ module Game
 			@active_player_name = game["active_player"]
 			fill_loaded_board("player_1", game)
 			fill_loaded_board("player_2", game)
-			board_view
-			exit
+			assign_players_pieces
+			2.times {active_player_change}
+			clear_screen
+			new_turn
 		end
 
 		def fill_loaded_board(player, game)
@@ -95,22 +97,22 @@ module Game
 				piece = variable['class']
 				case piece[13..-1]
 				when "Pawn"
-					@board[space.to_sym] = Pawn.new(space.to_sym)
+					@board[space.to_sym] = Pawn.new(variable["initial"].to_sym)
 				when "Rook"
-					@board[space.to_sym] = Rook.new(space.to_sym)
+					@board[space.to_sym] = Rook.new(variable["initial"].to_sym)
 				when "Knight"
-					@board[space.to_sym] = Knight.new(space.to_sym)
+					@board[space.to_sym] = Knight.new(variable["initial"].to_sym)
 				when "Bishop"
-					@board[space.to_sym] = Bishop.new(space.to_sym)
+					@board[space.to_sym] = Bishop.new(variable["initial"].to_sym)
 				when "Queen"
-					@board[space.to_sym] = Queen.new(space.to_sym)
+					@board[space.to_sym] = Queen.new(variable["initial"].to_sym)
 				when "King"
-					@board[space.to_sym] = King.new(space.to_sym)
+					@board[space.to_sym] = King.new(variable["initial"].to_sym)
 				else
 				end
 				@board[space.to_sym].marker = variable["marker"]
 				@board[space.to_sym].color = variable["color"]
-				@board[space.to_sym].initial = variable["initial"].to_sym
+				@board[space.to_sym].position = space.to_sym
 			end
 		end
 
@@ -387,7 +389,7 @@ module Game
 			if king[0].castle?(response, @board)
 				return true if path_clear?(response)
 			end
-			puts "Castle not valid, make sure that the path is clear and \nyour king wont be ambushed along the way"
+			puts "Castle not valid, make sure that the path is clear\n and your king wont be ambushed along the way\n"
 			return false
 		end
 
