@@ -1,4 +1,5 @@
 require_relative 'chess_pieces'
+require 'json'
 
 module Game
 
@@ -123,20 +124,24 @@ module Game
 			@player2_pieces_json = {}
 			pieces_to_json(@player1_pieces, @player1_pieces_json)
 			pieces_to_json(@player2_pieces, @player2_pieces_json)
-			saved_game = {'name' => name,
-										'active player' => active_player_name,
-										'player 1' => @player1_pieces_json,
-										'player 2' => @player2_pieces_json}
-			return saved_game
+			json_hash = {:name => name,
+									:active_player => @active_player_name,
+									:player_1 => @player1_pieces_json,
+									:player_2 => @player2_pieces_json}
+			saved_game = json_hash.to_json
 		end
 
 		def pieces_to_json (player_pieces, json_hash)
 			player_pieces.each do | piece |
-				json_hash[piece.class] = {'position' => piece.position.to_s,
-															 	 'marker' => piece.marker, 
-																 'color' => piece.color, 
-																 'initial' => piece.initial.to_s}
+				json_hash[piece.class] = {:position => piece.position.to_s,
+															 	 :marker => piece.marker, 
+																 :color => piece.color, 
+																 :initial => piece.initial.to_s}
 			end
+		end
+
+		def save_game(json_hash)
+			print json_hash
 		end
 
 		def move_piece(coordinates)
