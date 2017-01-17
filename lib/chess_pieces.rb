@@ -2,11 +2,11 @@ module ChessPieces
 	
 	class Queen
 
-		attr_accessor :position
-		attr_reader :marker, :color
+		attr_accessor :position, :marker, :color, :initial
 
 		def initialize(position)
 			@position = position
+			@initial = position
 			@marker = marker_color(position)
 		end
 
@@ -89,8 +89,7 @@ module ChessPieces
 
 	class Pawn
 
-		attr_accessor :position
-		attr_reader :marker, :color
+		attr_accessor :position, :marker, :color, :initial
 
 		def initialize(position)
 			@position = position
@@ -175,8 +174,7 @@ module ChessPieces
 
 	class Rook < Queen
 
-		attr_accessor :position
-		attr_reader :marker, :color, :initial
+		attr_accessor :position, :marker, :color, :initial
 
 		def initialize(position)
 			@position = position
@@ -203,11 +201,11 @@ module ChessPieces
 
 	class Knight
 
-		attr_accessor :position
-		attr_reader :marker, :color
+		attr_accessor :position, :marker, :color, :initial
 
 		def initialize(position)
 			@position = position
+			@initial = position
 			@marker = marker_color(position)
 		end
 
@@ -248,11 +246,11 @@ module ChessPieces
 
 	class Bishop < Queen
 
-		attr_accessor :position
-		attr_reader :marker, :color
+		attr_accessor :position, :marker, :color, :initial
 
 		def initialize(position)
 			@position = position
+			@initial = position
 			@marker = marker_color(position)
 		end
 
@@ -274,8 +272,7 @@ module ChessPieces
 
 	class King
 
-		attr_accessor :position
-		attr_reader :marker, :color, :long, :short, :initial
+		attr_accessor :position, :marker, :color, :initial, :long, :short
 
 		def initialize(position)
 			@position = position
