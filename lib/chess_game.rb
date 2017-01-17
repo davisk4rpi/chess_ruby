@@ -57,8 +57,27 @@ module Game
 				response = gets.chomp
 			end
 			new_game if response == '1'
-			load_saved_game if response == '2'
+			choose_saved_game if response == '2'
 			exit if response == '3'
+		end
+
+		def choose_saved_game
+			@games = {}
+			saved_games = File.open("saved_games/saved_games.json", "r").readlines
+			saved_games.each do | json_game |
+				game = JSON.parse(json_game)
+				@games[game['name']] = game
+				puts ""
+				puts "#{game['name']}"
+			end
+			puts "\nType in the name of the game you would like to load \n" +
+					 "this is case sensitive"
+			response = gets.chomp
+			until @games.keys.include? response
+				puts "Please choose from the list only!"
+				response = gets.chomp
+			end
+			load_saved_game(response)
 		end
 
 		def new_game
