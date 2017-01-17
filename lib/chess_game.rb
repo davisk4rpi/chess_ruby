@@ -69,9 +69,11 @@ module Game
 		def new_turn
 			puts "Enter your move with the following format: Starting Coordinate Ending Coordinates... ex: 'a2 a4'\n" +
 			"To castle, type in 'long castle' or 'short castle' instead of the coordinates\n" + 
+			"To save, type in 'save'\n" +
 			"#{@active_player_name}, your turn."
 			board_view
 			response = gets.chomp
+			save_game if response.downcase == 'save'
 			clear_screen
 
 			unless valid_move?(response)
@@ -105,6 +107,13 @@ module Game
 			end
 			active_player_change
 			new_turn
+		end
+
+		def save_game
+			puts "What name would you like to use to save the game?"
+			name = gets.chomp
+			serialize_game_board(name)
+			exit_game
 		end
 
 		def move_piece(coordinates)
