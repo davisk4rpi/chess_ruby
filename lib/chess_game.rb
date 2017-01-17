@@ -157,7 +157,7 @@ module Game
 
 			#check
 			if check_opponent? == "checkmate"
-				checkmate
+				return checkmate
 			elsif check_opponent? 
 				puts "Check!"
 			end
@@ -460,6 +460,13 @@ module Game
 
 		def clear_screen
 			system "clear" or system "cls"
+		end
+
+		def checkmate
+			puts "Checkmate!"
+			board_view
+			puts "#{@active_player_name} wins! What do you say? Want to play again?"
+			exit_game
 		end
 
 		def exit_game
