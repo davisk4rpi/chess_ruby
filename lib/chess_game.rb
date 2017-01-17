@@ -47,17 +47,17 @@ module Game
 			Please select on of the following options
 
 			1 New Game
-			2 Saved Game
+			2 Load Saved Game
 			3 Exit
 
 			HEREDOC
 			response = gets.chomp
 			until ['1','2','3'].include? response
-				"Pick from the options above"
+				puts "Pick from the options above"
 				response = gets.chomp
 			end
 			new_game if response == '1'
-			saved_game if response == '2'
+			load_saved_game if response == '2'
 			exit if response == '3'
 		end
 
