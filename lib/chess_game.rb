@@ -3,8 +3,6 @@ require 'json'
 
 module Game
 
-	
-
 	class GamePlay
 
 		include ChessPieces
